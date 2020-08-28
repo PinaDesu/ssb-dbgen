@@ -272,6 +272,7 @@ EXTERN int  step;
 EXTERN int	set_seeds;
 EXTERN int  validate;
 EXTERN char *d_path;
+EXTERN int stdout_output;
 
 /* added for segmented updates */
 EXTERN int insert_segments;
@@ -518,7 +519,7 @@ int dbg_print(int dt, FILE *tgt, void *data, int len, int eol);
 #define PR_MONEY(f, val) 		{ long tmp = val; dbg_print(DT_MONEY, f, &tmp, 0, 1);  }
 #define PR_CHR(f, val)	 		{ char tmp = val; dbg_print(DT_CHR,   f, &tmp, 0, 1);  }
 #define  PR_STRT(fp)   /* any line prep for a record goes here */
-#define  PR_END(fp)    fprintf(fp, "\n")   /* finish the record here */
+#define  PR_END(fp)   if ( stdout_output > 0 ) { fprintf(stdout, "\n"); } else { fprintf(fp, "\n"); } /* finish the record here */
 
 
 #ifdef SSB

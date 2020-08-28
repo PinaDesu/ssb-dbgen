@@ -80,76 +80,156 @@ dbg_print(int format, FILE *target, void *data, int len, int sep)
 	switch(format)
 	{
 	case DT_STR:
-		if (columnar)
+		if ( columnar ) {
 			/* Note: Columnar output cannot be in CSV format, */
 			/* so there's no sense in quoting the string.     */
-			fprintf(target, "%-*s", len, (char *)data);
-		else
+			if ( stdout_output ) {
+				fprintf(stdout, "%-*s", len, (char *)data);
+			} else {
+				fprintf(target, "%-*s", len, (char *)data);
+			}
+		} else {
 #ifdef DOUBLE_QUOTE_OUTPUT_STRINGS
-			fprintf(target, "\"%s\"", (char *)data);
+			if ( stdout_output ) {
+				fprintf(stdout, "\"%s\"", (char *)data);
+			} else {
+				fprintf(target, "\"%s\"", (char *)data);
+			}
 #else
-			fprintf(target, "%s", (char *)data);
+			if ( stdout_output ) {
+				fprintf(stdout, "%s", (char *)data);
+			} else {
+				fprintf(target, "%s", (char *)data);
+			}
 #endif
+		}
 		break;
 #ifdef MVS
 	case DT_VSTR:
 		/* note: only used in MVS, assumes columnar output */
-		fprintf(target, "%c%c%-*s", 
-			(len >> 8) & 0xFF, len & 0xFF, len, (char *)data);
+		if ( stdout_output ) {
+			fprintf(stdout, "%c%c%-*s", (len >> 8) & 0xFF, len & 0xFF, len, (char *)data);
+		} else {
+			fprintf(target, "%c%c%-*s", (len >> 8) & 0xFF, len & 0xFF, len, (char *)data);
+		}
 		break;
 #endif /* MVS */
 	case DT_INT:
-		if (columnar)
-			fprintf(target, "%12ld", *(long *)data);
-		else
-			fprintf(target, "%ld", *(long *)data);
+		if ( columnar ) {
+			if ( stdout_output ) {
+				fprintf(stdout, "%12ld", *(long *)data);
+			} else {
+				fprintf(target, "%12ld", *(long *)data);
+			}
+		} else {
+			if ( stdout_output ) {
+				fprintf(stdout, "%ld", (long)data);
+			} else {
+				fprintf(target, "%ld", (long)data);
+			}
+		}
 		break;
 	case DT_HUGE:
 #ifndef SUPPORT_64BITS
 		/* Note: Next block seems to assume little-endian memory order */
-        if (*((long *)data + 1) == 0) \
-           if (columnar) fprintf(target, "%12ld", *(long *)data);
-           else fprintf(target, "%ld", *(long *)data);
-        else
-           if (columnar) fprintf(target, "%5ld%07ld", 
-				*((long *)data + 1), *(long *)data);
-           else fprintf(target,"%ld%07ld", 
-				*((long *)data + 1), *(long *)data);
+		if ( *((long *)data + 1 ) == 0) {
+			if ( columnar ) {
+				if ( stdout_output ) {
+					fprintf(stdout, "%12ld", *(long *)data);
+				} else {
+					fprintf(target, "%12ld", *(long *)data);
+				}
+			} else {
+				if ( stdout_output ) {
+					fprintf(stdout, "%ld", *(long *)data);
+				} else {
+					fprintf(target, "%ld", *(long *)data);
+				}
+			}
+		} else {
+			if ( columnar ) {
+				if ( stdout_output ) {
+					fprintf(stdout, "%5ld%07ld", *((long *)data + 1), *(long *)data);
+				} else {
+					fprintf(target, "%5ld%07ld", *((long *)data + 1), *(long *)data);
+				}
+			} else {
+				if ( stdout_output ) {
+					fprintf(stdout, "%ld%07ld", *((long *)data + 1), *(long *)data);
+				} else {
+					fprintf(target, "%ld%07ld", *((long *)data + 1), *(long *)data);
+				}
+			}
+		}
 #else
-		fprintf(target, HUGE_FORMAT, *(DSS_HUGE *)data);
+		if ( stdout_output ) {
+			fprintf(stdout, HUGE_FORMAT, *(DSS_HUGE *)data);
+		} else {
+			fprintf(target, HUGE_FORMAT, *(DSS_HUGE *)data);
+		}
 #endif /* SUPPORT_64BITS */
 		break;
 	case DT_KEY:
-		fprintf(target, "%ld", *(long *)data);
+		if ( stdout_output ) {
+			fprintf(stdout, "%ld", (long)data);
+		} else {
+			fprintf(target, "%ld", (long)data);
+		}
 		break;
 	case DT_MONEY:
 		cents = *(long *)data;
-		if (cents < 0)
-			{
-			fprintf(target, "-");
-			cents = -cents;
+		if ( cents < 0 ) {
+			if ( stdout_output ) {
+				fprintf(stdout, "-");
+			} else {
+				fprintf(target, "-");
 			}
+			cents = -cents;
+		}
 		dollars = cents / 100;
 		cents %= 100;
-		if (columnar)
-			fprintf(target, "%12d.%02d", dollars, cents);
-		else
-			fprintf(target, "%d.%02d", dollars, cents);
+		if ( columnar ) {
+			if ( stdout_output ) {
+				fprintf(stdout, "%12d.%02d", dollars, cents);
+			} else {
+				fprintf(target, "%12d.%02d", dollars, cents);
+			}
+		} else {
+			if ( stdout_output ) {
+				fprintf(stdout, "%d.%02d", dollars, cents);
+			} else {
+				fprintf(target, "%d.%02d", dollars, cents);
+			}
+		}
 		break;
 	case DT_CHR:
-		if (columnar)
-			fprintf(target, "%c ", *(char *)data);
-		else
-			fprintf(target, "%c", *(char *)data);
+		if ( columnar ) {
+			if ( stdout_output ) {
+				fprintf(stdout, "%c ", *(char *)data);
+			} else {
+				fprintf(target, "%c ", *(char *)data);
+			}
+		} else {
+			if ( stdout_output ) {
+				fprintf(stdout, "%c", *(char *)data);
+			} else {
+				fprintf(target, "%c", *(char *)data);
+			}
+		}
 		break;
 	}
 
 #ifdef EOL_HANDLING
-	if (sep)
+	if ( sep )
 #endif /* EOL_HANDLING */
-	if (!columnar && (sep != -1))
-		fprintf(target, "%c", SEPARATOR);
-	
+	if ( !columnar && (sep != -1) ) {
+		if ( stdout_output ) {
+			fprintf(stdout, "%c", SEPARATOR);
+		} else {
+			fprintf(target, "%c", SEPARATOR);
+		}
+	}
+
 	return(0);
 }
 

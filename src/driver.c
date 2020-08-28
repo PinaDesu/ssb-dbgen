@@ -890,6 +890,11 @@ process_options (int count, char **vector)
 			  case 'm':			/* generate columnar output */
 				  columnar = 1;
 				  break;
+			  case 'o':			/* output generated data to stdout */
+					stdout_output = 1;
+					verbose = -1;		/* implies quiet */
+					force = 1;			/* implies force */
+				  break;
 			  case 'r':			/* generate key ranges for delete */
 				  gen_rng = 1;
 				  break;
@@ -985,6 +990,7 @@ main (int ac, char **av)
 		(1 << ORDER_LINE);
 #endif
 	force = 0;
+	stdout_output = 0;
 	insert_segments=0;
 	delete_segments=0;
 	insert_orders_segment=0;
