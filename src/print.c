@@ -123,9 +123,9 @@ dbg_print(int format, FILE *target, void *data, int len, int sep)
 			}
 		} else {
 			if ( stdout_output ) {
-				fprintf(stdout, "%ld", (long)data);
+				fprintf(stdout, "%ld", *(long *)data);
 			} else {
-				fprintf(target, "%ld", (long)data);
+				fprintf(target, "%ld", *(long *)data);
 			}
 		}
 		break;
@@ -171,9 +171,9 @@ dbg_print(int format, FILE *target, void *data, int len, int sep)
 		break;
 	case DT_KEY:
 		if ( stdout_output ) {
-			fprintf(stdout, "%ld", (long)data);
+			fprintf(stdout, "%ld", *(long *)data);
 		} else {
-			fprintf(target, "%ld", (long)data);
+			fprintf(target, "%ld", *(long *)data);
 		}
 		break;
 	case DT_MONEY:
