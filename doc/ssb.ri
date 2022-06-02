@@ -19,7 +19,7 @@ ALTER TABLE part
 ADD PRIMARY KEY (p_partkey);
 
 ALTER TABLE lineorder
-ADD PRIMARY KEY (lo_orderkey);
+ADD PRIMARY KEY (lo_orderkey, lo_linenumber);
 
 ALTER TABLE lineorder
 ADD FOREIGN KEY (lo_orderdate) REFERENCES date_ (d_datekey);
