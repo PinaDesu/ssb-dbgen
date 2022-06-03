@@ -51,9 +51,9 @@ Building process was tested using [Travis CI](https://travis-ci.org/) with [gcc]
 | `WORKLOAD` | As was already mentioned, this generator was created on the base of tpch-dbgen. And formally it supports data generation for TPC-H. But it's strongly recommended to use ssb-dbgen for SSB and tpch-dbgen for TPC-H. | `SSB`, `TPCH` | `SSB` |
 | `YMD_DASH_DATE` | When set to `ON`, generates dates with dashes between fields, i.e. `YYYY-MM-DD`; when set to `OFF`, no dashes are included, e.g. `YYYYMMDD`  | `ON`, `OFF` | `OFF` |
 
-
-<!--2. Set the value of the  variable to `DB2` - or, if you know what you're doing and you have a specific reason to do so, to one of the other databases in the commented list of possibilities.
-3. Set `WORKLOAD` to `SSB` (theoretically, `TPCH` might also work and generate TPC-H data, but don't count on it)  -->
+1. To change these options go to `CMakeLists.txt`.
+2. Set the value of the  variable to `DB2` - or, if you know what you're doing and you have a specific reason to do so, to one of the other databases in the commented list of possibilities.
+3. Set `WORKLOAD` to `SSB` (theoretically, `TPCH` might also work and generate TPC-H data, but don't count on it)
 
 ## <a name="using">Using the utility to generate data</a>
 
